@@ -12,7 +12,45 @@ public class NLM extends MDS {
     this.learningRate = 0.001;
   }
 
-  
+  protected void calculateDistanceMatrix(Dataset dataset, double[][] distanceMatrix) {
+    for (int i = 0; i < dataset.getNumSamples(); i++) {
+      for (int j = i; j < dataset.getNumSamples(); j++) {
+        double distance = 0.0;
+        
+        // 式(1)を参考にして距離計算を実装せよ．
+        for(int k = 0; k < dataset.getNumDimensions();k++){
+          distance += Math.pow(dataset.getFeature(i,k)-dataset.getFeature(j,k),2);
+        }
+        distance = Math.sqrt(distance);
+        distanceMatrix[i][j] = distance;
+        distanceMatrix[j][i] = distance;
+      }
+    }
+  }
+
+  @Override
+  public void init() {
+    this.isInitialized = false;
+    if (this.highDataset.isEmpty() == false) {
+      // サンプル数を得る．
+      int numSamples = this.highDataset.getNumSamples();
+      // 低次元空間を初期化する．
+      double[][] lowFeatures = new double[numSamples][2];
+      String[] lowLabels = new String[numSamples];
+      for (int i = 0; i < numSamples; i++) {
+        lowFeatures[i][0] = Math.random();
+        lowFeatures[i][1] = Math.random();
+        lowLabels[i] = this.highDataset.getLabel(i);
+      }
+      this.lowDataset = new Dataset(lowLabels, lowFeatures);
+      // 高次元空間の距離行列を計算しておく．
+      this.highDistanceMatrix = new double[numSamples][numSamples];
+      this.lowDistanceMatrix = new double[numSamples][numSamples];
+      this.calculateDistanceMatrix(this.highDataset, this.highDistanceMatrix);
+      // 初期化を完了した．
+      this.isInitialized = true;
+    }
+  }
 
   @Override
   public void update() {
