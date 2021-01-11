@@ -34,16 +34,18 @@ public class JExperience {
   	// 特徴ベクトルを読み込む．
     Dataset dataset = CsvDatasetReader.readDataset("scurve.csv");
     // Dataset dataset = CsvDatasetReader.readDataset("Iris_data.csv");
+    // Dataset dataset = CsvDatasetReader.readDataset("mnist.csv");
 
     // 描画画面を作成する．
   	// final JPanel panel = new JPanel();
-  	final VPanel panel = new VPanel();
+    final VPanel panel = new VPanel();
+    // final MnistPanel panel = new MnistPanel();
   	// panel.setPreferredSize(new Dimension(300, 300));
 
     // 埋込法（マッピングモデル）を定義する．
     // final EmbeddingMethod embMethod = new MDS();
-    // final EmbeddingMethod embMethod = new NLM();
-    final EmbeddingMethod embMethod = new SNE();
+    final EmbeddingMethod embMethod = new NLM();
+    // final EmbeddingMethod embMethod = new SNE();
     // マッピングモデルに特徴ベクトルをセットする．
     embMethod.setDataset(dataset);
 
