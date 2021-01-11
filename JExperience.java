@@ -9,8 +9,8 @@ import java.awt.Dimension;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.Timer;
-
-
+import javax.swing.*;
+import java.io.*;
 
 public class JExperience {
   public static void main(String[] args) {
@@ -44,8 +44,8 @@ public class JExperience {
 
     // 埋込法（マッピングモデル）を定義する．
     // final EmbeddingMethod embMethod = new MDS();
-    final EmbeddingMethod embMethod = new NLM();
-    // final EmbeddingMethod embMethod = new SNE();
+    // final EmbeddingMethod embMethod = new NLM();
+    final EmbeddingMethod embMethod = new SNE();
     // マッピングモデルに特徴ベクトルをセットする．
     embMethod.setDataset(dataset);
 
@@ -64,8 +64,12 @@ public class JExperience {
     final JPanel panelButton = new JPanel();
     final JButton buttonRun = new JButton("Run");
     final JButton buttonStop = new JButton("Stop");
+    final JButton buttonRead = new JButton("Read File");
+
     panelButton.add(buttonRun);
     panelButton.add(buttonStop);
+    //Read button
+    panelButton.add(buttonRead);
 
 
   	// RUNボタンに動作を登録（定義）する．
@@ -89,6 +93,24 @@ public class JExperience {
       }
     });
 
+    buttonRead.addActionListener(new ActionListener() {
+      File file;
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        JFileChooser fileChooser = new JFileChooser();
+        int selected = fileChooser.showOpenDialog(frame);
+        if (selected == JFileChooser.APPROVE_OPTION) {
+          file = fileChooser.getSelectedFile();
+          // 特徴ベクトルを読み込む．
+          Dataset dataset = CsvDatasetReader.readDataset(file.getName());
+          // マッピングモデルに特徴ベクトルをセットする．
+          embMethod.setDataset(dataset);
+          // マッピングモデルのオブサーバーとして描画画面を登録する．
+          embMethod.setVisualizer(panel);
+          //System.out.println(dataset.getNumSamples());
+        }
+      }
+    });
 
     // ウィンドウのレイアウトを設定する．
     final Container content = frame.getContentPane();
